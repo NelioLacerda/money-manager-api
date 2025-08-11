@@ -16,6 +16,6 @@ public class ServerController {
      */
     @GetMapping
     public String status() {
-        return "MoneyManaer API is running!";
+        return "MoneyManager API is running!";
     }
 }
