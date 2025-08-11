@@ -25,7 +25,7 @@ public class ExpenseService {
     private final ProfileService profileService;
 
     public ExpenseDTO addExpense(ExpenseDTO expenseDTO){
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
         CategoryEntity category = categoryRepository.findById(expenseDTO.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found."));
 
@@ -41,14 +41,14 @@ public class ExpenseService {
     }
 
     public List<ExpenseDTO> getExpenses() {
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
 
         return expenseRepository.findByProfileIdOrderByDateDesc(profile.getId()).stream()
                 .map(ExpenseMapper.getInstance()::toDto).toList();
     }
 
     public ExpenseDTO updateExpense(Long expenseId, ExpenseDTO dto) {
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
 
         CategoryEntity existingCategory = categoryRepository.findByIdAndProfileId(dto.getCategoryId(), profile.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found."));
@@ -66,7 +66,7 @@ public class ExpenseService {
     }
 
     public BigDecimal getTotalExpenses() {
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
         BigDecimal expenseTotal = expenseRepository.findTotalExpensesByProfileId(profile.getId());
         return expenseTotal != null ? expenseTotal : BigDecimal.ZERO;
     }

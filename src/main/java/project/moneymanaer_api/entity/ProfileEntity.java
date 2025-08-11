@@ -24,9 +24,19 @@ public class ProfileEntity {
 
     private String userName;
 
+    @Column(unique = true)
+    private String email;
+
     private String password;
 
     private String profileImageUrl;
+
+    /**
+     * False if the profile is not active (didn't confirm email), true otherwise
+     */
+    private Boolean isActive;
+
+    private String activationToken;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -34,4 +44,11 @@ public class ProfileEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    private void prePersist() {
+        if (this.isActive == null) {
+            this.isActive = false;
+        }
+    }
 }

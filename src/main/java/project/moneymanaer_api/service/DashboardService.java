@@ -21,7 +21,7 @@ public class DashboardService {
     private final ExpenseService expenseService;
 
     public Map<String, Object> getDashboardData(){
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
         Map<String, Object> dashboardData = new LinkedHashMap<>();
 
         List<IncomeDTO> lastestIncomes = incomeService.getIncomes();

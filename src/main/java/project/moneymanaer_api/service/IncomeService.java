@@ -26,7 +26,7 @@ public class IncomeService {
     private final ProfileService profileService;
 
     public IncomeDTO addIncome(IncomeDTO incomeDTO){
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
         CategoryEntity category = categoryRepository.findById(incomeDTO.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found."));
 
@@ -42,14 +42,14 @@ public class IncomeService {
     }
 
     public List<IncomeDTO> getIncomes() {
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
 
         return incomeRepository.findByProfileIdOrderByDateDesc(profile.getId()).stream()
                 .map(IncomeMapper.getInstance()::toDto).toList();
     }
 
     public IncomeDTO updateIncome(Long incomeId, IncomeDTO dto) {
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
 
         CategoryEntity existingCategory = categoryRepository.findByIdAndProfileId(dto.getCategoryId(), profile.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found."));
@@ -67,7 +67,7 @@ public class IncomeService {
     }
 
     public BigDecimal getTotalIncomes() {
-        ProfileEntity profile = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profile = profileService.getCurrentProfile();
         BigDecimal totalIncomes = incomeRepository.findTotalIncomesByProfileId(profile.getId());
         return totalIncomes != null ? totalIncomes : BigDecimal.ZERO;
     }

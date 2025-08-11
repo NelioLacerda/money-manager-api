@@ -1,6 +1,8 @@
 package project.moneymanaer_api.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,10 +20,11 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+
     private final ProfileService profileService;
 
     public CategoryDTO addCategory(CategoryDTO categoryDTO){
-        ProfileEntity profileEntity = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profileEntity = profileService.getCurrentProfile();
         if (categoryRepository.existsByNameAndProfileId(categoryDTO.getName(), profileEntity.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Category already exists.");
         }
@@ -32,14 +35,14 @@ public class CategoryService {
     }
 
     public List<CategoryDTO> getUserCategories(){
-        ProfileEntity profileEntity = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profileEntity = profileService.getCurrentProfile();
 
         return categoryRepository.findByProfileId(profileEntity.getId()).stream()
                 .map(CategoryMapper.getInstance()::toDto).toList();
     }
 
     public CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO) {
-        ProfileEntity profileEntity = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profileEntity = profileService.getCurrentProfile();
         CategoryEntity existingCategory = categoryRepository.findByIdAndProfileId(categoryId, profileEntity.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found."));
 
@@ -52,7 +55,7 @@ public class CategoryService {
 
     //todo: precisa ser mudado
     public void deleteCategory(Long categoryId){
-        ProfileEntity profileEntity = profileService.getCurrentProfile("Nelio");
+        ProfileEntity profileEntity = profileService.getCurrentProfile();
 
         CategoryEntity existingCategory = categoryRepository.findByIdAndProfileId(categoryId, profileEntity.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found."));

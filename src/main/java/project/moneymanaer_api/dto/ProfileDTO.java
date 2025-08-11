@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 public class ProfileDTO {
     private Long id;
     private String userName;
+    private String email;
     private String password;
     private String profileImageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }
