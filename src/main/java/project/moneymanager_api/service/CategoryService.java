@@ -39,6 +39,13 @@ public class CategoryService {
                 .map(CategoryMapper.getInstance()::toDto).toList();
     }
 
+    public List<CategoryDTO> getUserCategoriesByType(String categoryType){
+        ProfileEntity profileEntity = profileService.getCurrentProfile();
+
+        return  categoryRepository.findByTypeAndProfileId(CategoryType.fromString(categoryType), profileEntity.getId()).stream()
+                .map(CategoryMapper.getInstance()::toDto).toList();
+    }
+
     public CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO) {
         ProfileEntity profileEntity = profileService.getCurrentProfile();
         CategoryEntity existingCategory = categoryRepository.findByIdAndProfileId(categoryId, profileEntity.getId())

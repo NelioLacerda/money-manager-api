@@ -29,6 +29,7 @@ public class ProfileService {
     public ProfileDTO register(ProfileDTO profileDTO){
         if (profileRepository.findByEmail(profileDTO.getEmail()).isPresent())
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists.");
+
         ProfileEntity newProfile = ProfileMapper.getInstance().toEntity(profileDTO);
 
         newProfile.setActivationToken(UUID.randomUUID().toString());

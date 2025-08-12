@@ -26,6 +26,11 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getUserCategories());
     }
 
+    @GetMapping("/{categoryType}")
+    public ResponseEntity<List<CategoryDTO>> getCategoriesByType(@PathVariable String categoryType){
+        return ResponseEntity.ok().body(categoryService.getUserCategoriesByType(categoryType));
+    }
+
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId){
         categoryService.deleteCategory(categoryId);

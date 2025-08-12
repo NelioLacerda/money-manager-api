@@ -1,6 +1,7 @@
 package project.moneymanager_api.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -69,5 +70,10 @@ public class ExpenseService {
         ProfileEntity profile = profileService.getCurrentProfile();
         BigDecimal expenseTotal = expenseRepository.findTotalExpensesByProfileId(profile.getId());
         return expenseTotal != null ? expenseTotal : BigDecimal.ZERO;
+    }
+
+    public List<ExpenseDTO> filterExpenses(LocalDate startDate, LocalDate endDate, String keyword, Sort sort){
+        ProfileEntity profile = profileService.getCurrentProfile();
+        return expenseRepository.findByProfileIdAndDateBetweenAndNameContainingIgnoreCase(profile.getId(), startDate, endDate, keyword, sort).stream().map(ExpenseMapper.getInstance()::toDto).toList();
     }
 }
