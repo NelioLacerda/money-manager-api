@@ -71,4 +71,9 @@ public class ProfileController {
         profileService.deleteCurrentProfile();
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/photo")
+    public ResponseEntity<ProfileDTO> updateProfilePhoto(@RequestBody String profileImageUrl){
+        return ResponseEntity.ok().body(profileService.updateProfilePhoto(profileImageUrl));
+    }
 }

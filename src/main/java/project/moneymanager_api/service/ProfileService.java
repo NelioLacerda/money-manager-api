@@ -1,6 +1,7 @@
 package project.moneymanager_api.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,10 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
+
+    @Value("${money.manager.backend.url}")
+    private String backendUrl;
 
     public ProfileDTO register(ProfileDTO profileDTO){
         if (profileRepository.findByEmail(profileDTO.getEmail()).isPresent())
@@ -36,7 +41,10 @@ public class ProfileService {
         newProfile.setIsActive(false);
         newProfile = profileRepository.save(newProfile);
 
-        //email activation goes where...
+        String activationLink = backendUrl + "/api/activate?token=" + newProfile.getActivationToken();
+        String subject = "Money Manager - Activate your account";
+        String emailBody = "Click the link below to activate your account: " + activationLink;
+        emailService.sendEmail(newProfile.getEmail(), subject, emailBody);
 
         return ProfileMapper.getInstance().toDto(newProfile);
     }
@@ -91,5 +99,12 @@ public class ProfileService {
     public void deleteCurrentProfile(){
         ProfileEntity currentProfile = getCurrentProfile();
         profileRepository.delete(currentProfile);
+    }
+
+    public ProfileDTO updateProfilePhoto(String profileImageUrl) {
+        ProfileEntity profileEntity = getCurrentProfile();
+        profileEntity.setProfileImageUrl(profileImageUrl);
+        profileRepository.save(profileEntity);
+        return ProfileMapper.getInstance().toDto(profileEntity);
     }
 }

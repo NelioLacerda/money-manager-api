@@ -1,6 +1,7 @@
 package project.moneymanager_api.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import project.moneymanager_api.service.mapper.ExpenseMapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,12 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
     private final ProfileService profileService;
+
+    private static final Map<String, String[]> HEADERS = Map.of(
+            "pt", new String[]{"Data", "Nome", "Categoria", "Valor", "Ícone"},
+            "en", new String[]{"Date", "Name", "Category", "Amount", "Icon"}
+    );
+
 
     public ExpenseDTO addExpense(ExpenseDTO expenseDTO){
         ProfileEntity profile = profileService.getCurrentProfile();
